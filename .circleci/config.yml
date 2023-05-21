@@ -9,10 +9,34 @@ jobs:
       - checkout
 
       - run:
+          name: Detect Changed Directory
+          command: |
+            CHANGED_DIR=$(git diff --name-only $CIRCLE_SHA1..$CIRCLE_SHA1~1 | grep '/' | cut -d'/' -f1 | uniq)
+            if [ -n "$CHANGED_DIR" ]; then
+              echo "Changed directory: $CHANGED_DIR"
+              echo "export TF_WORKING_DIR=$CHANGED_DIR" >> $BASH_ENV
+            else
+              echo "No changes detected in any directory."
+              exit 0
+            fi
+
+      - run:
           name: Initialize Terraform
-          command: terraform init
+          command: terraform init $TF_WORKING_DIR
+      - run:
+          name: Set Dummy Credentials
+          command: |
+            echo "export AWS_ACCESS_KEY_ID='dummy_access_key'" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY='dummy_secret_key'" >> $BASH_ENV
+            echo "export AWS_DEFAULT_REGION='us-west-2'" >> $BASH_ENV
+            source $BASH_ENV
 
       - run:
           name: Terraform Plan
-          command: terraform plan
+          command: terraform plan $TF_WORKING_DIR
 
+workflows:
+  version: 2
+  build-and-plan:
+    jobs:
+      - build
