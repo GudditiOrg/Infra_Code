@@ -5,45 +5,35 @@ jobs:
     docker:
       - image: gudditi/retraform:latest
 
+    environment:
+      FOLDER_NAME: "ec2"
+
     steps:
       - checkout
       - run:
           name: Configure AWS Config
           command: |
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     
-      - run:
-          name: Detect Changed Directory
-          command: |
-            CHANGED_DIR=$(git diff --name-only $CIRCLE_SHA1..$CIRCLE_SHA1~1 | grep '/' | cut -d'/' -f1 | uniq)
-            if [ -n "$CHANGED_DIR" ]; then
-              echo "Changed directory: $CHANGED_DIR"
-              echo "export TF_WORKING_DIR=$CHANGED_DIR" >> $BASH_ENV
-            else
-              echo "No changes detected in any directory."
-              exit 0
-            fi
-
       - run:
           name: Initialize Terraform
           command: |
-            cd $TF_WORKING_DIR
+            cd $FOLDER_NAME
             terraform init
       - run:
           name: Validate code
           command: |
-            cd $TF_WORKING_DIR
+            cd $FOLDER_NAME
             terraform validate
       - run:
           name: Format code
           command: |
-            cd $TF_WORKING_DIR
+            cd $FOLDER_NAME
             terraform fmt
       - run:
           name: Plan
           command: |
-            cd $TF_WORKING_DIR
+            cd $FOLDER_NAME
             ls -ltr 
             terraform plan
 
