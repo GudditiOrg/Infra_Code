@@ -27,18 +27,24 @@ jobs:
 
       - run:
           name: Initialize Terraform
-          command: terraform init $TF_WORKING_DIR
+          command: |
+            cd $TF_WORKING_DIR
+            terraform init
       - run:
           name: Validate code
-          command: terraform validate
+          command: |
+            cd $TF_WORKING_DIR
+            terraform validate
       - run:
           name: Format code
-          command: terraform fmt
+          command: |
+            cd $TF_WORKING_DIR
+            terraform fmt
       - run:
           name: Plan
-          command: terraform plan
-
-
+          command: |
+            cd $TF_WORKING_DIR
+            terraform plan
 
 workflows:
   version: 2
