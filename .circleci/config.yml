@@ -23,13 +23,7 @@ jobs:
       - run:
           name: Initialize Terraform
           command: terraform init $TF_WORKING_DIR
-      - run:
-          name: Set Dummy Credentials
-          command: |
-            echo "export AWS_ACCESS_KEY_ID='dummy_access_key'" >> $BASH_ENV
-            echo "export AWS_SECRET_ACCESS_KEY='dummy_secret_key'" >> $BASH_ENV
-            echo "export AWS_DEFAULT_REGION='us-west-2'" >> $BASH_ENV
-            source $BASH_ENV
+
 
       - run:
           name: Terraform Plan
