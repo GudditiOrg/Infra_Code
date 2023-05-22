@@ -1,31 +1,4 @@
-version: 2.1
 
-jobs:
-  example-job:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - name: Install Terraform
-        run: |
-          curl -LO https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip
-          unzip terraform_1.0.0_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform version
-      - name: Configure AWS CLI
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region us-west-2
-      - name: Execute Terraform
-        run: |
-          terraform init
-          terraform plan
-          terraform apply -auto-approve
-
-workflows:
-  example-workflow:
-    jobs:
-      - example-job
 version: 2.1
 
 jobs:
