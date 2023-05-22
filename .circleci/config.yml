@@ -26,6 +26,10 @@ jobs:
       - run:
           name: validate code
           command: terraform validate
+      - run:
+          name: fmt 
+          command: terraform fmt
+          
 
 workflows:
   version: 2
