@@ -1,5 +1,0 @@
-{
-    "files.refactoring.autoSave": true,
-    "files.autoSave": "onFocusChange",
-    "ansible.python.interpreterPath": "/usr/bin/python3"
-}
