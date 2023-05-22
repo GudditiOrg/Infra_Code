@@ -33,7 +33,7 @@ jobs:
 
       - run:
           name: Terraform Plan
-          command: terraform plan $TF_WORKING_DIR
+          #command: terraform plan $TF_WORKING_DIR
 
 workflows:
   version: 2
