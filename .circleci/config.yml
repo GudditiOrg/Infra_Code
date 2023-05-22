@@ -23,6 +23,9 @@ jobs:
       - run:
           name: Initialize Terraform
           command: terraform init $TF_WORKING_DIR
+      - run:
+          name: validate code
+          command: terraform validate
 
 workflows:
   version: 2
