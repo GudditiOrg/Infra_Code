@@ -44,6 +44,7 @@ jobs:
           name: Plan
           command: |
             cd $TF_WORKING_DIR
+            ls -ltr 
             terraform plan
 
 workflows:
