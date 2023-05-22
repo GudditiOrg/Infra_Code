@@ -24,10 +24,6 @@ jobs:
           name: Initialize Terraform
           command: terraform init $TF_WORKING_DIR
 
-      - run: 
-          name: Terraform Plan
-          #command: terraform plan $TF_WORKING_DIR
-
 workflows:
   version: 2
   build-and-plan:
