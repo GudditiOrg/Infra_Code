@@ -1,28 +1,47 @@
 version: 2.1
 
 jobs:
-  job:
+  build:
     docker:
-      - image: cimg/base:stable
+      - image: hashicorp/terraform:1.0.0
+
     steps:
-      - name: Install Terraform
-        run: |
-          curl -LO https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip
-          unzip terraform_1.0.0_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform version
-      - name: Configure AWS CLI
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region us-west-2
-      - name: Execute Terraform
-        run: |
-          terraform init
-          terraform plan
-          
+      - checkout
+      - run:
+          name: Configure AWS Config
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    
+      - run:
+          name: Detect Changed Directory
+          command: |
+            CHANGED_DIR=$(git diff --name-only $CIRCLE_SHA1..$CIRCLE_SHA1~1 | grep '/' | cut -d'/' -f1 | uniq)
+            if [ -n "$CHANGED_DIR" ]; then
+              echo "Changed directory: $CHANGED_DIR"
+              echo "export TF_WORKING_DIR=$CHANGED_DIR" >> $BASH_ENV
+            else
+              echo "No changes detected in any directory."
+              exit 0
+            fi
+
+      - run:
+          name: Initialize Terraform
+          command: terraform init $TF_WORKING_DIR
+      - run:
+          name: Validate code
+          command: terraform validate
+      - run:
+          name: Format code
+          command: terraform fmt
+      - run:
+          name: Plan
+          command: terraform plan
+
+
 
 workflows:
-  example-workflow:
+  version: 2
+  build-and-plan:
     jobs:
-      - job
+      - build
