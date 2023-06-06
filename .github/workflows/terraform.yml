@@ -12,7 +12,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: chnage directory
-        run: cd ec2
+        run: |
+          cd ec2
+          ls -lrt
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
