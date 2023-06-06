@@ -27,6 +27,7 @@ jobs:
           terraform init
           terraform validate
           terraform fmt
-          terraform plan -no-color
+          terraform plan -no-color -var-file="main.tf"
+
           
 
