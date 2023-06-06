@@ -3,7 +3,7 @@ name: Terraform
 on: 
   push:
     branches:
-      - "version2"
+      - version2
 
 jobs:
   terraform-job:
