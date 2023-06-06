@@ -11,11 +11,17 @@ jobs:
     steps:
       - name: code checkout
         uses: actions/checkout@v3
+      - name: chnage directory
+        run: cd ec2
+        
       - name: terrafrom init
         run: terrafrom init
+        
       - name: terraform validate
         run: terraform validate
+        
       - name: terraform format
-        run: terrafrom fmt 
+        run: terrafrom fmt
+        
       - name: terrafrom plan
         run: terraform plan
