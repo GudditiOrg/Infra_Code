@@ -23,20 +23,11 @@ jobs:
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
       - uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
 
       - name: Terraform Init
-        id: init
-        run: terraform init
+        run: |
+          terraform init
+          terraform validate
+          terraform fmt
+          terraform plan -no-color
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color
-        continue-on-error: true
