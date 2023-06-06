@@ -10,13 +10,19 @@ jobs:
     steps:
       - name: code checkout
         uses: actions/checkout@v3
+
       - name: chnage directory
         run: cd ec2
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: ap-south-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.1.7
         
       - name: terrafrom init
         run: terrafrom init
