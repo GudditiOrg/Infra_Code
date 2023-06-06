@@ -1,0 +1,21 @@
+name: Terraform
+
+on: 
+  push:
+    branches:
+      - "version2"
+
+jobs:
+  terraform-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v3
+      - name: terrafrom init
+        run: terrafrom init
+      - name: terraform validate
+        run: terraform validate
+      - name: terraform format
+        run: terrafrom fmt 
+      - name: terrafrom plan
+        run: terraform plan
