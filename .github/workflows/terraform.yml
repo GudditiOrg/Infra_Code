@@ -21,8 +21,6 @@ jobs:
         with:
           aws-region: ap-south-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
-
-      - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
 
       - name: Terraform fmt
