@@ -24,14 +24,14 @@ jobs:
         with:
           terraform_version: 1.1.7
         
-      - name: terrafrom init
-        run: terrafrom init
+      - name: terraform init
+        run: terraform init
         
       - name: terraform validate
         run: terraform validate
         
       - name: terraform format
-        run: terrafrom fmt
+        run: terraform fmt
         
-      - name: terrafrom plan
+      - name: terraform plan
         run: terraform plan
