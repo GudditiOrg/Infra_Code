@@ -30,4 +30,5 @@ jobs:
           terraform validate
           terraform fmt
           terraform plan -no-color
+          
 
