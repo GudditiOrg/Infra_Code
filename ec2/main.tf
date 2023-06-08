@@ -8,7 +8,7 @@ terraform {
   backend "s3" {
     bucket = "guddititf"
     region = "us-east-1"
-    key = "state/"
+    key = "state"
 
     
   }
