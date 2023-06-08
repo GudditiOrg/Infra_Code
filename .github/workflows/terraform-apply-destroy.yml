@@ -18,7 +18,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: ap-south-1
+          aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
 
       - name: code checkout
@@ -49,7 +49,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: ap-south-1
+          aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
 
       - name: code checkout
