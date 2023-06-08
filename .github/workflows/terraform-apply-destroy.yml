@@ -1,0 +1,65 @@
+name: Terraform- Plan and Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      manual_approval:
+        description: 'Approve the job manually (true -> approve) (false -> cancel) '
+        required: true
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.manual_approval == 'true' }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ap-south-1
+          role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
+
+      - name: code checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform Init
+        run: |
+          cd $GITHUB_WORKSPACE
+          cd ec2
+          terraform init
+          terraform validate
+          terraform fmt
+          terraform plan 
+      - name: terraform apply 
+        run: terraform apply --auto-approve
+
+  terraform-destroy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.manual_approval == 'false' }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ap-south-1
+          role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
+
+      - name: code checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform Init
+        run: |
+          cd $GITHUB_WORKSPACE
+          cd ec2
+          terraform init
+          terraform validate
+          terraform fmt
+          terraform plan 
+      - name: terraform apply 
+        run: terraform destroy --auto-approve
+
+               
