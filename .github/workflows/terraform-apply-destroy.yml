@@ -41,6 +41,7 @@ jobs:
 
   terraform-destroy:
     runs-on: ubuntu-latest
+    needs: terraform-apply
     if: ${{ github.event.inputs.manual_approval == 'true' }}
     permissions:
       id-token: write
