@@ -25,7 +25,7 @@ jobs:
       - name: Terraform Init
         run: |
           cd $GITHUB_WORKSPACE
-          ls -lrt
+          cd ec2
           terraform init
           terraform validate
           terraform fmt
