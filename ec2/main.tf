@@ -5,6 +5,13 @@ terraform {
       version = "~> 4.0"
     }
   }
+  backend "s3" {
+    bucket = "guddititf"
+    region = "us-east-1"
+    key = "state/"
+
+    
+  }
 }
 
 # Configure the AWS Provider
