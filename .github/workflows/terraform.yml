@@ -1,8 +1,7 @@
 name: Terraform
 
-on:
-  workflow_dispatch:
-  
+on: [push]
+
 jobs:
   terraform-job:
     runs-on: ubuntu-latest
@@ -15,15 +14,17 @@ jobs:
         with:
           aws-region: ap-south-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
+          
       - uses: hashicorp/setup-terraform@v2
 
       - name: code checkout
         uses: actions/checkout@v3
 
-      - name: chnage directory
+      - name: change directory
         run: |
           cd ec2
           ls -lrt
+
       - name: Terraform Init
         run: |
           terraform init
@@ -31,6 +32,3 @@ jobs:
           terraform fmt
           aws s3 ls
           terraform plan -no-color -var-file="main.tf"
-
-          
-
