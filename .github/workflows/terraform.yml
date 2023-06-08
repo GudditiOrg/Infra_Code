@@ -30,4 +30,4 @@ jobs:
           terraform validate
           terraform fmt
           aws s3 ls
-          terraform plan -no-color -var-file="main.tf"
+          terraform plan 
