@@ -21,33 +21,27 @@ jobs:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
 
-      - name: Code checkout
+      - name: code checkout
         uses: actions/checkout@v3
 
       - name: Terraform Init
         run: |
-          cd $GITHUB_WORKSPACE/ec2
+          cd $GITHUB_WORKSPACE
+          cd ec2
           terraform init
           terraform validate
           terraform fmt
-          terraform plan -out=tfplan
-          mkdir -p $GITHUB_WORKSPACE/terraform-state
-          mv .terraform/*.tfstate $GITHUB_WORKSPACE/terraform-state/
-
-      - name: Store Terraform state
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-state
-          path: $GITHUB_WORKSPACE/terraform-state
-
-      - name: Terraform Apply
+          terraform plan 
+      - name: terraform apply 
         run: |
-          cd $GITHUB_WORKSPACE/ec2
-          terraform apply --auto-approve tfplan
+          cd $GITHUB_WORKSPACE
+          cd ec2
+          terraform apply --auto-approve
+
 
   terraform-destroy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.manual_approval == 'false' }}
+    if: ${{ github.event.inputs.manual_approval == 'true' }}
     permissions:
       id-token: write
       contents: read
@@ -58,22 +52,18 @@ jobs:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
 
-      - name: Code checkout
+      - name: code checkout
         uses: actions/checkout@v3
-
-      - name: Retrieve Terraform state
-        uses: actions/download-artifact@v2
-        with:
-          name: terraform-state
-          path: $GITHUB_WORKSPACE/terraform-state
 
       - name: Terraform Init
         run: |
-          cd $GITHUB_WORKSPACE/ec2
-          mkdir -p .terraform
-          cp $GITHUB_WORKSPACE/terraform-state/*.tfstate .terraform/
+          cd $GITHUB_WORKSPACE
+          cd ec2
+          terraform init
+          terraform validate
+          terraform fmt
+          terraform plan 
+      - name: terraform apply 
+        run: terraform destroy --auto-approve
 
-      - name: Terraform Destroy
-        run: |
-          cd $GITHUB_WORKSPACE/ec2
-          terraform destroy --auto-approve
+               
