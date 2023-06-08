@@ -7,3 +7,7 @@ resource "aws_instance" "ec2" {
     }
   
 }
+output "ec2-public-ip" {
+  value = aws_instance.ec2.public_dns
+  
+}
