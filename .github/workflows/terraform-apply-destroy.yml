@@ -65,6 +65,8 @@ jobs:
           terraform fmt
           terraform plan 
       - name: terraform apply 
-        run: terraform destroy --auto-approve
+        run: |
+          cd $GITHUB_WORKSPACE/ec2
+          terraform destroy --auto-approve
 
                
