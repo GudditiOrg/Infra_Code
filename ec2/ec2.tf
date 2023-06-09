@@ -31,8 +31,6 @@ resource "aws_instance" "ec2" {
       #!/bin/bash
       sudo apt update 
       sudo apt install -y apache2 git
-      cd /var/www/html
-      sudo git clone https://github.com/GudditiNaganjaneyulu/GudditiNaganjaneyulu.github.io.git
       sudo service apache2 start
     EOF
     tags = {
@@ -42,6 +40,6 @@ resource "aws_instance" "ec2" {
   
 }
 output "ec2-public-ip" {
-  value = aws_instance.ec2.public_dns
+  value = aws_instance.ec2.public_ip
   
 }
