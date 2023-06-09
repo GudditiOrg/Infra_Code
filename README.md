@@ -11,3 +11,5 @@ create  - to create infra
 destroy - to destroy infra
 
 ```
+
+![image](https://github.com/GudditiOrg/Infra_Code/assets/87116202/ec6b95c0-6c97-4272-962d-10d2d19d7828)
