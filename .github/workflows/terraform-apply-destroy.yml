@@ -63,7 +63,7 @@ jobs:
           terraform validate
           terraform fmt
           terraform plan 
-      - name: terraform apply 
+      - name: terraform destroy 
         run: |
           cd $GITHUB_WORKSPACE/ec2
           terraform destroy --auto-approve
