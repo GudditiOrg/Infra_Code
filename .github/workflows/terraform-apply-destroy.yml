@@ -52,8 +52,6 @@ jobs:
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
-      - name: Wait for 3 minutes
-        run: sleep 180
 
       - name: code checkout
         uses: actions/checkout@v3
