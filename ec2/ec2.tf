@@ -32,7 +32,7 @@ resource "aws_instance" "ec2" {
       sudo apt update 
       sudo apt install -y apache2 git
       cd /var/www/html
-      git clone https://github.com/GudditiNaganjaneyulu/GudditiNaganjaneyulu.github.io.git
+      sudo git clone https://github.com/GudditiNaganjaneyulu/GudditiNaganjaneyulu.github.io.git
       sudo service apache2 start
     EOF
     tags = {
