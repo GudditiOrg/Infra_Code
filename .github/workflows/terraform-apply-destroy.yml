@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       manual_approval:
-        description: 'Approve the job manually (true -> approve) (false -> cancel) '
+        description: 'Approve the job manually (create -> to apply) (destroy -> to destroy) '
         required: true
 
 jobs:
   terraform-apply:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.manual_approval == 'true' }}
+    if: ${{ github.event.inputs.manual_approval == 'create' }}
     permissions:
       id-token: write
       contents: read
@@ -42,7 +42,7 @@ jobs:
   terraform-destroy:
     runs-on: ubuntu-latest
     needs: terraform-apply
-    if: ${{ github.event.inputs.manual_approval == 'true' }}
+    if: ${{ github.event.inputs.manual_approval == 'destroy' }}
     permissions:
       id-token: write
       contents: read
