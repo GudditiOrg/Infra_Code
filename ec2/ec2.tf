@@ -13,7 +13,7 @@ resource "aws_security_group" "web_sg" {
 resource "aws_instance" "ec2" {
     ami = "ami-053b0d53c279acc90"
     instance_type = "t2.micro"
-    security_groups = aws_security_group.web_sg.name
+    security_groups = [aws_security_group.web_sg.id]
     user_data = <<-EOF
       #!/bin/bash
       sudo apt update 
