@@ -35,7 +35,7 @@ jobs:
       - name: terraform apply 
         run: |
           cd $GITHUB_WORKSPACE
-          cd ec2
+          cd vpc
           terraform apply --auto-approve
 
 
@@ -65,7 +65,7 @@ jobs:
           terraform plan 
       - name: terraform destroy 
         run: |
-          cd $GITHUB_WORKSPACE/ec2
+          cd $GITHUB_WORKSPACE/vpc
           terraform destroy --auto-approve
 
                
