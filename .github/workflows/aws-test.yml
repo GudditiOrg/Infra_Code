@@ -37,5 +37,5 @@ jobs:
     steps:
       - name: test
         env:
-          role-to-assume: ${{ needs.build.outputs.aws_branch-role }}
-        run: echo "$role-to-assume"
+          ARN: ${{ needs.build.outputs.aws_branch-role }}
+        run: echo "$ARN"
