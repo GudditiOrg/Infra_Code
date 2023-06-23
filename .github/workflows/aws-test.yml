@@ -1,4 +1,4 @@
-name: Docker build and Test  
+name: Docker build and Test
 on: [push]
 jobs:
   build-test:
@@ -6,19 +6,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' ? secrets.AWS_ROLE_ARN_DEV : secrets.AWS_ROLE_ARN_QA }}
-          aws-region: ${{ env.ECR_REGION }}
+          aws-region: ap-south-1
           mask-aws-account-id: 'no'
-      
-
-	
-
-
-          
-
-
-
