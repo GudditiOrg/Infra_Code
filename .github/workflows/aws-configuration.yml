@@ -1,23 +1,27 @@
-name: AWS Credentials Workflow
+name: AWS Configuration
 
-
+on:
+  push:
+    branches:
+      - develop
+      - testing
+      - main
 
 jobs:
-  configure-credentials:
+  configure-aws-credentials:
     runs-on: ubuntu-latest
+
     steps:
       - name: Configure AWS Credentials to Dev
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
-          aws-region: ap-south-1
+          aws-region: ${{ env.ECR_REGION }}
           mask-aws-account-id: 'no'
-        if: ${{ github.ref == 'refs/heads/main'  }}
-      
+
       - name: Configure AWS Credentials to QA
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.QA_AWS_ROLE_ARN }}
-          aws-region: ap-south-1
+          aws-region: ${{ env.ECR_REGION }}
           mask-aws-account-id: 'no'
-        if: ${{ github.ref == 'refs/heads/test'  }}
