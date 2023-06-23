@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     outputs:
       ROLE: ${{ steps.step1.outputs.test }}
       
@@ -38,4 +35,4 @@ jobs:
       - name: Test
         env:
           ARN: ${{ needs.build.outputs.ROLE }}
-        run: echo $ARN" 
+        run: echo $ARN
