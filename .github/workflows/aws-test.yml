@@ -22,14 +22,12 @@ jobs:
         id: step1
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "AWS_ROLE_ARN=$DEV" >> $GITHUB_ENV
+            echo "AWS_ROLE_ARN=${{ secrets.DEV_AWS_ROLE_ARN }}" >> $GITHUB_ENV
           else
-            echo "AWS_ROLE_ARN=$QA" >> $GITHUB_ENV
+            echo "AWS_ROLE_ARN=${{ secrets.QA_AWS_ROLE_ARN }}" >> $GITHUB_ENV
           fi
           echo $AWS_ROLE_ARN >> $GITHUB_ENV
-        env:
-          DEV: ${{ secrets.DEV_AWS_ROLE_ARN }}
-          QA: ${{ secrets.QA_AWS_ROLE_ARN }}
+  
 
   step2:
     runs-on: ubuntu-latest
