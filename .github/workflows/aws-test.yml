@@ -22,15 +22,14 @@ jobs:
         id: step1
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "export AWS_ROLE_ARN=$DEV" >> $GITHUB_ENV
+            echo "test=$DEV"  >> "$GITHUB_OUTPUT"
           else
-            echo "export AWS_ROLE_ARN=$QA" >> $GITHUB_ENV
+            echo "test=$QA"  >> "$GITHUB_OUTPUT"
           fi
           echo $AWS_ROLE_ARN >> $GITHUB_ENV
         env:
-          DEV: ${{ secrets.DEV_AWS_ROLE_ARN }}
-          QA: ${{ secrets.QA_AWS_ROLE_ARN }}
-
+          DEV: ${{ secrets.AWS_ROLE_ARN_DEV }}
+          QA: ${{ secrets.AWS_ROLE_ARN_QA }}
   step2:
     runs-on: ubuntu-latest
     needs: build
@@ -38,4 +37,5 @@ jobs:
       - name: test
         env:
           role-to-assume: ${{ needs.build.outputs.aws_branch-role }}
-        run: echo $role-to-assume
+        run: echo ${ role-to-assume }
+
