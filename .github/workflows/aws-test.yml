@@ -20,7 +20,8 @@ jobs:
         
       - name: Check branch and export AWS role ARN
         id: step1
-        with: mask-aws-account-id: 'no'
+        with: 
+          mask-aws-account-id: 'no'
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "test=${{ secrets.DEV_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
