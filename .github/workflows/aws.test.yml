@@ -25,7 +25,7 @@ jobs:
           role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }}
           aws-region: us-east-1
           mask-aws-account-id: 'no'
-        if: env.AWS_ROLE_MAPPING[github.ref] != null
+        if: ${{ env.AWS_ROLE_MAPPING[github.ref] != null }}
 
       - name: List S3 Buckets
         run: aws s3 ls
