@@ -22,9 +22,9 @@ jobs:
         id: step1
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "export AWS_ROLE_ARN=$DEV" >> $GITHUB_ENV
+            echo "AWS_ROLE_ARN=$DEV" >> $GITHUB_ENV
           else
-            echo "export AWS_ROLE_ARN=$QA" >> $GITHUB_ENV
+            echo "AWS_ROLE_ARN=$QA" >> $GITHUB_ENV
           fi
           echo $AWS_ROLE_ARN >> $GITHUB_ENV
         env:
