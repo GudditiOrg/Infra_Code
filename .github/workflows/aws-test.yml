@@ -33,4 +33,4 @@ jobs:
       - name: Test
         env:
           ARN: ${{ steps.step1.outputs.test }}
-        run: echo $ARN" 
+        run: echo $ARN
