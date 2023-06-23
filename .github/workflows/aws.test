@@ -1,19 +1,25 @@
-name: aws test 
-on: [push]
+name: aws test
+on:
+  push:
+    branches:
+      - main
+      - 'testing/*'
 
 jobs:
-  runs-on: ubuntu-latest
-  permissions:
-    id-token: write
-    contents: read
-  steps:
-    - name: Configure AWS Credentials
-      id: configure-aws-credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: ${{ github.ref == 'refs/heads/main' ? secrets.DEV_AWS_ROLE_ARN : secrets.QA_AWS_ROLE_ARN }}
-        aws-region: us-east-1
-        mask-aws-account-id: 'no'
-      if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/testing/') }}
-    - name: ls
-      run: aws s3 ls
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS Credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ github.ref == 'refs/heads/main' ? secrets.DEV_AWS_ROLE_ARN : secrets.QA_AWS_ROLE_ARN }}
+          aws-region: us-east-1
+          mask-aws-account-id: 'no'
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/testing/') }}
+
+      - name: List S3 Buckets
+        run: aws s3 ls
