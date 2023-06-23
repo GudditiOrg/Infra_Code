@@ -12,7 +12,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      AWS_ROLE: ${{ steps.step1.outputs.test }}
+      ROLE: ${{ steps.step1.outputs.test }}
       
     steps:
       - name: Checkout code
@@ -37,5 +37,5 @@ jobs:
     steps:
       - name: Test
         env:
-          ARN: ${{ needs.build.outputs.AWS_ROLE }}
-        run: echo $ARN
+          ARN: ${{ needs.build.outputs.ROLE }}
+        run: echo $ARN" getting this build
