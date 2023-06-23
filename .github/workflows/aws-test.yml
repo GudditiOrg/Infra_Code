@@ -12,7 +12,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      ROLE: ${{ steps.step1.outputs.test }}
+      AWS_ROLE: ${{ steps.step1.outputs.test }}
       
     steps:
       - name: Checkout code
@@ -20,8 +20,6 @@ jobs:
         
       - name: Check branch and export AWS role ARN
         id: step1
-        with: 
-          mask-aws-account-id: 'no'
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "test=${{ secrets.DEV_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
@@ -32,12 +30,12 @@ jobs:
           elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
             echo "test=${{ secrets.PROD_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
           fi
-
+          
   step2:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Test
         env:
-          ARN: ${{ needs.build.outputs.ROLE }}
+          ARN: ${{ needs.build.outputs.AWS_ROLE }}
         run: echo $ARN
