@@ -12,7 +12,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      aws_branch-role: ${{ steps.step1.outputs.test }}
+      aws_branch-role: ${{ steps.step1.outputs.AWS_ROLE_ARN }}
       
     steps:
       - name: checkout code
@@ -22,14 +22,15 @@ jobs:
         id: step1
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "export test=$DEV"  >> "$GITHUB_OUTPUT"
+            echo "export AWS_ROLE_ARN=$DEV" >> $GITHUB_ENV
           else
-            echo "export test=$QA"  >> "$GITHUB_OUTPUT"
+            echo "export AWS_ROLE_ARN=$QA" >> $GITHUB_ENV
           fi
           echo $AWS_ROLE_ARN >> $GITHUB_ENV
         env:
-          DEV: ${{ secrets.AWS_ROLE_ARN_DEV }}
-          QA: ${{ secrets.AWS_ROLE_ARN_QA }}
+          DEV: ${{ secrets.DEV_AWS_ROLE_ARN }}
+          QA: ${{ secrets.QA_AWS_ROLE_ARN }}
+
   step2:
     runs-on: ubuntu-latest
     needs: build
@@ -38,4 +39,3 @@ jobs:
         env:
           role-to-assume: ${{ needs.build.outputs.aws_branch-role }}
         run: echo $role-to-assume
-
