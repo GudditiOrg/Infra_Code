@@ -19,12 +19,26 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Configure AWS Credentials
+        id: aws_credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        env:
+          AWS_REGION: ${{ env.ECR_REGION }}
+          
+      - name: Set AWS Role to Assume
+        id: set_aws_role
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "::set-output name=role_arn::${{ secrets.DEV_AWS_ROLE_ARN }}"
+          elif [ "${{ github.ref }}" = "refs/heads/testing" ]; then
+            echo "::set-output name=role_arn::${{ secrets.QA_AWS_ROLE_ARN }}"
+          else
+            echo "::set-output name=role_arn::${{ secrets.AWS_ROLE_ARN_DEFAULT }}"
+          fi
+
+      - name: Assume AWS Role
+        id: assume_role
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
-          aws-region: ${{ env.ECR_REGION }}
+          role-to-assume: ${{ steps.set_aws_role.outputs.role_arn }}
+          aws-region: ${{ env.AWS_REGION }}
           mask-aws-account-id: 'no'
-        env:
-          ROLE_TO_ASSUME: ${{ if eq(github.ref, 'refs/heads/main') }}${{ secrets.DEV_AWS_ROLE_ARN }}${{ else if eq(github.ref, 'refs/heads/testing/') }}${{ secrets.QA_AWS_ROLE_ARN }}${{ else }}${{ secrets.AWS_ROLE_ARN_DEFAULT }}${{ endif }}
-
-
