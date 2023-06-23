@@ -4,6 +4,13 @@ on:
     branches:
       - main
       - 'testing/*'
+env:
+  AWS_ROLE_MAPPING: >
+    {
+      "refs/heads/main": "DEV_AWS_ROLE_ARN",
+      "refs/heads/testing/": "QA_AWS_ROLE_ARN",
+    }
+      
 
 jobs:
   build-and-test:
@@ -16,10 +23,10 @@ jobs:
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ github.ref == 'refs/heads/main' ? secrets.DEV_AWS_ROLE_ARN : secrets.QA_AWS_ROLE_ARN }}
+          role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }
           aws-region: us-east-1
           mask-aws-account-id: 'no'
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/testing/') }}
+        if: env.AWS_ROLE_MAPPING[github.ref] != null
 
       - name: List S3 Buckets
         run: aws s3 ls
