@@ -21,7 +21,7 @@ jobs:
       - name: Check branch and export AWS role ARN
         id: step1
         run: |
-          if [[ ${{ github.ref }} == 'refs/heads/develop' ]]; then
+          if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
             echo "export AWS_ROLE_ARN=$AWS_ROLE_ARN_DEV" >> $GITHUB_ENV
           else
             echo "export AWS_ROLE_ARN=$AWS_ROLE_ARN_QA" >> $GITHUB_ENV
@@ -36,6 +36,6 @@ jobs:
     steps:
       - name: test
         env:
-          role-to-assume: ${{ needs.docker-build.outputs.aws_branch-role }}
-        run: echo ${role-to-assume}
+          role-to-assume: ${{ needs.step1.outputs.aws_branch-role }}
+        run: echo ${ role-to-assume }
 
