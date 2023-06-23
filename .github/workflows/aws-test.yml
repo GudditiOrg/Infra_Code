@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      ROLE: ${{ steps.step1.outputs.test }}
+      role: ${{ steps.step1.outputs.test }}
       
     steps:
       - name: Checkout code
@@ -34,5 +34,5 @@ jobs:
     steps:
       - name: Test
         env:
-          ARN: ${{ needs.build.outputs.ROLE }}
-        run: echo $ARN
+          ARN: ${{ needs.build.outputs.role }}
+        run: echo ${ARN}
