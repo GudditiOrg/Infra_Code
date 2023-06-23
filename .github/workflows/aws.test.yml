@@ -18,6 +18,11 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Set Branch Matched
+        id: branch-matched
+        run: echo ::set-output name=matched::true
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/testing/') }}
+
       - name: Configure AWS Credentials
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -25,7 +30,7 @@ jobs:
           role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }}
           aws-region: us-east-1
           mask-aws-account-id: 'no'
-        if: ${{ env.AWS_ROLE_MAPPING[github.ref] != null }}
+        if: steps.branch-matched.outputs.matched == 'true'
 
       - name: List S3 Buckets
         run: aws s3 ls
