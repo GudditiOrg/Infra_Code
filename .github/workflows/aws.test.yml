@@ -1,36 +1,35 @@
-name: aws test
+name: AWS Test
+
 on:
   push:
     branches:
       - main
       - 'testing/*'
+
 env:
-  AWS_ROLE_MAPPING: >
-    {
-      "refs/heads/main": "DEV_AWS_ROLE_ARN",
-      "refs/heads/testing/": "QA_AWS_ROLE_ARN"
-    }
+  AWS_REGION: ap-south-1
+  AWS_ROLE_MATRIX: '{"main": "DEV_AWS_ROLE_ARN", "testing/": "QA_AWS_ROLE_ARN"}'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
+
+    strategy:
+      matrix:
+        branch: [main, testing/]
+
     steps:
-      - name: Set Branch Matched
-        id: branch-matched
-        run: echo ::set-output name=matched::true
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/testing/') }}
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
         id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }}
-          aws-region: ap-south-1
+          role-to-assume: ${{ secrets[env.AWS_ROLE_MATRIX[matrix.branch]] }}
+          aws-region: ${{ env.AWS_REGION }}
           mask-aws-account-id: 'no'
-        if: steps.branch-matched.outputs.matched == 'true'
+        if: startsWith(github.ref, 'refs/heads/') && env.AWS_ROLE_MATRIX[matrix.branch]
 
       - name: List S3 Buckets
         run: aws s3 ls
