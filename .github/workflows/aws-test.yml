@@ -15,7 +15,7 @@ jobs:
       ROLE: ${{ steps.step1.outputs.AWS_ROLE_ARN }}
       
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
         
       - name: Check branch and export AWS role ARN
@@ -26,14 +26,14 @@ jobs:
           else
             echo "AWS_ROLE_ARN=${{ secrets.QA_AWS_ROLE_ARN }}" >> $GITHUB_ENV
           fi
-          echo $AWS_ROLE_ARN >> $GITHUB_ENV
+          echo ${{ env.AWS_ROLE_ARN }} >> $GITHUB_ENV
   
 
   step2:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: test
+      - name: Test
         env:
           ARN: ${{ needs.build.outputs.ROLE }}
         run: echo $ARN
