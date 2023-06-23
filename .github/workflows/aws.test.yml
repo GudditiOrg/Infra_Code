@@ -8,9 +8,8 @@ env:
   AWS_ROLE_MAPPING: >
     {
       "refs/heads/main": "DEV_AWS_ROLE_ARN",
-      "refs/heads/testing/": "QA_AWS_ROLE_ARN",
+      "refs/heads/testing/": "QA_AWS_ROLE_ARN"
     }
-      
 
 jobs:
   build-and-test:
@@ -23,7 +22,7 @@ jobs:
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }
+          role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }}
           aws-region: us-east-1
           mask-aws-account-id: 'no'
         if: env.AWS_ROLE_MAPPING[github.ref] != null
