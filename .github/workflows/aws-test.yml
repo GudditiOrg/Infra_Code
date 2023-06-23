@@ -36,4 +36,4 @@ jobs:
       - name: test
         env:
           ARN: ${{ needs.build.outputs.ROLE }}
-        run: echo "$ARN"
+        run: echo $ARN
