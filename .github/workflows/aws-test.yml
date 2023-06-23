@@ -12,7 +12,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      ROLE: ${{ steps.step1.outputs.AWS_ROLE_ARN }}
+      ROLE: ${{ steps.step1.outputs.test }}
       
     steps:
       - name: Checkout code
@@ -21,13 +21,15 @@ jobs:
       - name: Check branch and export AWS role ARN
         id: step1
         run: |
-          if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "AWS_ROLE_ARN=${{ secrets.DEV_AWS_ROLE_ARN }}" >> $GITHUB_ENV
-          else
-            echo "AWS_ROLE_ARN=${{ secrets.QA_AWS_ROLE_ARN }}" >> $GITHUB_ENV
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "test=${{ secrets.DEV_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == "refs/heads/testing/" ]]; then
+            echo "test=${{ secrets.QA_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == "refs/heads/staging/" ]]; then
+            echo "test=${{ secrets.STAGING_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
+            echo "test=${{ secrets.PROD_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
           fi
-          echo ${{ env.AWS_ROLE_ARN }} >> $GITHUB_ENV
-  
 
   step2:
     runs-on: ubuntu-latest
