@@ -1,15 +1,41 @@
-name: Docker build and Test
-on: [push]
-jobs:
-  build-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+name: AWS Deployment
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' ? secrets.AWS_ROLE_ARN_DEV : secrets.AWS_ROLE_ARN_QA }}
-          aws-region: ap-south-1
-          mask-aws-account-id: 'no'
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  step1:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      aws_branch-role: ${{ steps.step1.outputs.test }}
+      
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+        
+      - name: Check branch and export AWS role ARN
+        id: step1
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/develop' ]]; then
+            echo "export AWS_ROLE_ARN=$AWS_ROLE_ARN_DEV" >> $GITHUB_ENV
+          else
+            echo "export AWS_ROLE_ARN=$AWS_ROLE_ARN_QA" >> $GITHUB_ENV
+          fi
+          echo $AWS_ROLE_ARN >> $GITHUB_ENV
+        env:
+          AWS_ROLE_ARN_DEV: ${{ secrets.AWS_ROLE_ARN_DEV }}
+          AWS_ROLE_ARN_QA: ${{ secrets.AWS_ROLE_ARN_QA }}
+  step2:
+    runs-on: ubuntu-latest
+    needs: step1
+    steps:
+      - name: test
+        env:
+          role-to-assume: ${{ needs.docker-build.outputs.aws_branch-role }}
+        run: echo ${role-to-assume}
+
