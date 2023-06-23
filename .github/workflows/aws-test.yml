@@ -1,0 +1,35 @@
+name: Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Call AWS Credentials Workflow
+        uses: ./.github/workflows/credentials-workflow.yml
+      - name: s3
+        run: aws s3 ls 
+
+      # Additional steps for job1
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Call AWS Credentials Workflow
+        uses: ./.github/workflows/credentials-workflow.yml
+      - name: s3
+        run: aws s3 ls 
+
+      # Additional steps for job2
+
+# Add more jobs as needed
