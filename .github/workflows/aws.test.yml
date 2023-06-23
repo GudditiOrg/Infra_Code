@@ -28,7 +28,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets[env.AWS_ROLE_MAPPING[github.ref]] }}
-          aws-region: us-east-1
+          aws-region: ap-south-1
           mask-aws-account-id: 'no'
         if: steps.branch-matched.outputs.matched == 'true'
 
