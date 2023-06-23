@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      role: ${{ steps.step1.outputs.test }}
       
     steps:
       - name: Checkout code
@@ -19,13 +17,13 @@ jobs:
         id: step1
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "test=${{ secrets.DEV_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+            echo "test=${{ secrets.DEV_AWS_ROLE_ARN }}"
           elif [[ "${{ github.ref }}" == "refs/heads/testing/" ]]; then
-            echo "test=${{ secrets.QA_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+            echo "test=${{ secrets.QA_AWS_ROLE_ARN }}"
           elif [[ "${{ github.ref }}" == "refs/heads/staging/" ]]; then
-            echo "test=${{ secrets.STAGING_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+            echo "test=${{ secrets.STAGING_AWS_ROLE_ARN }}"
           elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
-            echo "test=${{ secrets.PROD_AWS_ROLE_ARN }}" >> "$GITHUB_OUTPUT"
+            echo "test=${{ secrets.PROD_AWS_ROLE_ARN }}"
           fi
           
   step2:
@@ -34,5 +32,5 @@ jobs:
     steps:
       - name: Test
         env:
-          ARN: ${{ needs.build.outputs.role }}
-        run: echo ${ARN}
+          ARN: ${{ steps.step1.outputs.test }}
+        run: echo $ARN" 
